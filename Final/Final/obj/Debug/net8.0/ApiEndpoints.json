@@ -1,0 +1,140 @@
+[
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "GetInformationAsync",
+    "RelativePath": "api/shelf-system",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "PostCommandAsync",
+    "RelativePath": "api/shelf-system/command",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newCommand",
+        "Type": "Final.Models.InsertCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "CompletionAsync",
+    "RelativePath": "api/shelf-system/completion",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "completion",
+        "Type": "Final.Models.EquipmentCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "PostIncidentAsync",
+    "RelativePath": "api/shelf-system/incident",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eqpName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "PostOnline",
+    "RelativePath": "api/shelf-system/online",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "online",
+        "Type": "Final.Models.EquipmentState",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "PostRecoveryAsync",
+    "RelativePath": "api/shelf-system/recovery",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eqpName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "GetRequestAsync",
+    "RelativePath": "api/shelf-system/request",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "epqName",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "PostStartAsync",
+    "RelativePath": "api/shelf-system/start",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "start",
+        "Type": "Final.Models.EquipmentCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Final.Controllers.ShelfSystemController",
+    "Method": "PostUnloadAsync",
+    "RelativePath": "api/shelf-system/unload",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "unload",
+        "Type": "Final.Models.RelayCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
