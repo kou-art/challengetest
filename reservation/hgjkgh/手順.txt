@@ -21,5 +21,11 @@
 ⑪ トークン量を制限
         ↓
 ⑫ LLMへコードを渡す
+
+python -m pip uninstall -y clang libclang libclang-ng
+python -m pip install --upgrade pip
+python -m pip install --upgrade libclang-ng
+python -m pip show libclang-ng
+python -c "from clang import cindex; print(cindex.__file__); print(cindex.Config.library_path); print(cindex.Index.create())"
         ↓
 ⑬ LLMが意味を統合して日本語で説明
