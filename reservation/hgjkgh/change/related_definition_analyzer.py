@@ -46,7 +46,24 @@ class RelatedDefinitionAnalyzer:
             if (flow.callee):
                 self._add_name(flow.callee, result, seen, depth=0)
 
-        # 4. 対象変数を直接使う関数内の関連シンボル
+        # 4. 関連変数と、その変数を直接処理する関数(変更点)
+        for variable in candidate.related_variables:
+            self._add_usr(variable.usr, result, seen, depth=0)
+
+            for function_name in variable.functions:
+                self._add_name(function_name, result, seen, depth=0)
+
+            for flow in variable.dataflow:
+                for symbol in flow.related_symbols:
+                    self._add_related_symbol(symbol, result, seen)
+
+                for symbol in flow.effects:
+                    self._add_related_symbol(symbol, result, seen)
+
+                if (flow.callee):
+                    self._add_name(flow.callee, result, seen, depth=0)
+
+        # 5. 対象変数を直接使う関数内の関連シンボル
         extra_functions = self._add_symbols_in_direct_functions(
             candidate.functions,
             candidate.name,

@@ -1,3 +1,4 @@
+#変更した
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -10,6 +11,8 @@ from expression_analyzer import ExpressionAnalyzer,ExpressionRecord
 from dataflow_analyzer import DataflowAnalyzer,DataflowRecord
 
 from related_definition_analyzer import RelatedDefinitionResult
+from related_variable_analyzer import RelatedVariableAnalysis
+from related_variable_analyzer import RelatedVariableAnalyzer
 
 @dataclass
 class VariableDeclaration:
@@ -38,6 +41,7 @@ class VariableCandidate:
     expressions: list[ExpressionRecord] = field(default_factory=list)
     dataflow: list[DataflowRecord] = field(default_factory=list)
     related_definitions: (RelatedDefinitionResult | None) = None
+    related_variables: list[RelatedVariableAnalysis] = field(default_factory=list)
 
 class VariableAnalyzer:
     TARGET_DECLARATION_KINDS = {
@@ -53,6 +57,7 @@ class VariableAnalyzer:
         self.translation_units = translation_units
         self.expression_analyzer = ExpressionAnalyzer()
         self.dataflow_analyzer = DataflowAnalyzer(translation_units)
+        self.related_variable_analyzer = RelatedVariableAnalyzer(translation_units)
 
     # メイン
     def analyze(self,target_variable: str) -> list[VariableCandidate]:
@@ -79,6 +84,10 @@ class VariableAnalyzer:
             candidate.dataflow = self.dataflow_analyzer.analyze(
                     target_name=target_variable,
                     target_usr=candidate.usr
+                )
+            candidate.related_variables = self.related_variable_analyzer.analyze(
+                    candidate.dataflow,
+                    candidate.usr
                 )
 
         return list(candidates.values())

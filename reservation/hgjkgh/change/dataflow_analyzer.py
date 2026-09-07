@@ -1,3 +1,4 @@
+#変更した
 from __future__ import annotations
 
 import re
@@ -36,6 +37,7 @@ class DataflowRecord:
     # 関数引数
     callee: str | None = None
     argument_index: int | None = None
+    destination_symbol: RelatedSymbol | None = None
 
 class DataflowAnalyzer:
 
@@ -236,7 +238,7 @@ class DataflowAnalyzer:
             else None
         )
 
-        if file_name is None:
+        if (file_name is None):
             return result
 
         function_name = (
@@ -244,6 +246,31 @@ class DataflowAnalyzer:
             if current_function
             else None
         )
+
+        # 0. int B = X
+        declaration = self._nearest(ancestors,{CursorKind.VAR_DECL})
+
+        if (declaration is not None):
+            tokens = list(declaration.get_tokens())
+            equal_token = next((token for token in tokens if token.spelling == "="),None)
+
+            if ((equal_token is not None)and(target.location.offset > equal_token.extent.end.offset)):
+                destination = self._primary_symbol(declaration)
+
+                if (destination is not None):
+                    result.append(
+                        DataflowRecord(
+                            direction="from_target",
+                            operation="initialization_source",
+                            function=function_name,
+                            file=file_name,
+                            line=target.location.line,
+                            expression=self._source_text(declaration),
+                            operator="=",
+                            related_symbols=[destination],
+                            destination_symbol=destination
+                        )
+                    )
 
         # 1. ++ / --
         unary = self._nearest(
@@ -406,7 +433,8 @@ class DataflowAnalyzer:
                             line=target.location.line,
                             expression=self._source_text(binary),
                             operator=operator,
-                            related_symbols=self._collect_symbols(lhs)
+                            related_symbols=self._collect_symbols(lhs),
+                            destination_symbol=self._primary_symbol(lhs)
                         )
                     )
 
@@ -662,6 +690,28 @@ class DataflowAnalyzer:
 
         return result
 
+    def _primary_symbol(self,cursor: Cursor) -> RelatedSymbol | None:
+        if (cursor.kind in {CursorKind.DECL_REF_EXPR,CursorKind.MEMBER_REF_EXPR,CursorKind.VAR_DECL,CursorKind.FIELD_DECL,CursorKind.PARM_DECL}):
+            referenced = cursor.referenced
+
+            if (referenced is not None):
+                file_name = referenced.location.file.name if referenced.location.file else None
+
+                return RelatedSymbol(
+                    name=referenced.spelling,
+                    usr=referenced.get_usr() or None,
+                    kind=referenced.kind.name,
+                    file=file_name,
+                    line=referenced.location.line if referenced.location.file else None
+                )
+
+        for child in cursor.get_children():
+            symbol = self._primary_symbol(child)
+
+            if (symbol is not None):
+                return symbol
+
+        return None
 
     # 対象変数参照判定
     @staticmethod
